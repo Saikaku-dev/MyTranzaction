@@ -20,4 +20,6 @@ final class MockData {
 
 final class MockBank {
     static let banks: [String] = ["ゆうちょ銀行", "みずほ銀行", "楽天銀行", "みらい銀行", "楽天銀行"]
+    static let cards: [String] = ["楽天カード", "みずほカード", "ゆうちょカード", "楽天カード", "みらいカード"]
+    static let electronicMoney: [String] = ["PayPal", "Apple Pay", "Google Pay", "iTunes Store", "Amazon Pay"]
 }

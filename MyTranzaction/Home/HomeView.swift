@@ -11,67 +11,85 @@ struct HomeView: View {
     let mock = MockData() //Mockデータ
     
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
-                // MARK: - HEADER 総資産・マイナス資産
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("資産合計")
-                        Spacer()
-                        Text("\(mock.totalAssets)円")
+        VStack {
+            // MARK: - HEADBAR
+            // fetch機能とお知らせ・設定
+            HStack {
+                Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90") // FetchAll
+                Spacer()
+                Image(systemName: "bell") //設定による支払いのお知らせ
+                    .padding(.trailing)
+                Image(systemName: "gearshape") //User設定
+                    .onTapGesture {
+                        print("Clicked gear") //TODO: ユーザーカスタマイズ
                     }
-                    Rectangle()
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 1)
-                    HStack { //マイナス資産
-                        Text("負債")
-                        Spacer()
-                        Text("\(mock.liabilities)円") //自分の負債額
+            }
+            .foregroundColor(.cyan)
+            .font(.system(size: 24))
+            .padding(.horizontal)
+            
+            GeometryReader { geometry in
+                ScrollView {
+                    // MARK: - HEADER 総資産・マイナス資産
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("資産合計")
+                            Spacer()
+                            Text("\(mock.totalAssets)円")
+                        }
+                        Rectangle()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 1)
+                        HStack { //マイナス資産
+                            Text("負債")
+                            Spacer()
+                            Text("\(mock.liabilities)円") //自分の負債額
+                        }
                     }
-                }
-                .homeViewTitleFont()
-                .frame(maxWidth: .infinity)
-                .padding()
-                .mainColor()
-                
-                // MARK: - BODY (収入・支出)を具体的な月分を表示
-                VStack {
-                    HStack { // タイトル
-                        Image(systemName: "star.fill")
-                            .foregroundColor(.cyan)
-                        Text("家計簿")
-                        Text("\(Date().monthToString())")
-                        Spacer()
-                    }
-                    .padding(.leading)
+                    .homeViewTitleFont()
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .mainColor()
                     
-                    HStack {
-                        // グラフで表示する収支
-                        ZStack {
-                            Circle()
-                                .frame(width: 150)
-                            Circle()
-                                .fill(.white)
-                                .frame(width: 65)
+                    // MARK: - BODY (収入・支出)を具体的な月分を表示
+                    VStack {
+                        HStack { // タイトル
+                            Image(systemName: "star.fill")
+                                .foregroundColor(.cyan)
+                            Text("家計簿")
+                            Text("\(Date().monthToString())")
+                            Spacer()
                         }
-                        .padding(.trailing)
+                        .padding(.leading)
                         
-                        VStack(alignment: .leading) {
-                            // 収支データ
-                            smartBalanceRow(label: "収入", value: mock.income)
-                            smartBalanceRow(label: "支出", value: mock.expenditure)
-                            Divider()
-                            smartBalanceRow(label: "収支", value: mock.getBalance())
+                        HStack {
+                            // グラフで表示する収支
+                            ZStack {
+                                Circle()
+                                    .frame(width: 150)
+                                Circle()
+                                    .fill(.white)
+                                    .frame(width: 65)
+                            }
+                            .padding(.trailing)
+                            
+                            VStack(alignment: .leading) {
+                                // 収支データ
+                                smartBalanceRow(label: "収入", value: mock.income)
+                                smartBalanceRow(label: "支出", value: mock.expenditure)
+                                Divider()
+                                smartBalanceRow(label: "収支", value: mock.getBalance())
+                            }
+                            .font(.title3)
+                            .foregroundColor(.gray)
                         }
-                        .font(.title3)
-                        .foregroundColor(.gray)
+                        .padding()
                     }
+                    .padding(.vertical)
+                    .background(.white)
+                    .cornerRadius(8)
                     .padding()
                 }
-                .padding(.vertical)
-                .background(.white)
-                .cornerRadius(8)
-                .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(.systemGray6))

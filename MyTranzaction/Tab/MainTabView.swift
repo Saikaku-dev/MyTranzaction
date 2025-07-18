@@ -17,8 +17,13 @@ struct MainTabView: View {
                 }
             BankView()
                 .tabItem {
-                    Image(systemName: "star")
+                    Image(systemName: "chineseyuanrenminbisign.bank.building")
                     Text("Bank")
+                }
+            TodoView()
+                .tabItem {
+                    Image(systemName: "list.bullet")
+                    Text("Todo")
                 }
         }
     }
