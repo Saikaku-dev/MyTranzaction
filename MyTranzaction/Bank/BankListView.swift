@@ -9,53 +9,72 @@ import SwiftUI
 
 struct BankListView: View {
     private let categories:[String] = ["銀行", "カード", "電子マネー"]
-    @State private var selectedIndex: Int = 0
-    @State private var selectedBank = MockBank.banks[0]
-    @State private var selectedCard = MockBank.cards[0]
-    @State private var selectedPayment = MockBank.electronicMoney[0]
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var vm: BankViewModel
-    
+    @EnvironmentObject var vm: BankListViewModel
+    @EnvironmentObject var bankVM: BankViewModel
+    @State var keyword: String = ""
+    @State var currentBank: Bank?
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                Picker ("Category", selection: $selectedIndex) {
-                    ForEach(categories.indices, id: \.self) { index in
-                        Text(categories[index])
-                    }
+        VStack(spacing: 0) {
+            Picker ("Category", selection: $vm.selectedIndex) {
+                ForEach(categories.indices, id: \.self) { index in
+                    Text(categories[index])
                 }
-                .pickerStyle(.segmented)
-                .padding(.vertical)
-                
-                if selectedIndex == 0 {
-                    listRowStyle(title: "おすすめの銀行", items: MockBank.banks) { item in
-                        vm.myBanks.append(item)
-                        dismiss()
-                    }
-                } else if selectedIndex == 1 {
-                    listRowStyle(title: "おすすめのカード", items: MockBank.cards) { item in
-                        vm.myCards.append(item)
-                        dismiss()
-                    }
-                } else if selectedIndex == 2 {
-                    listRowStyle(title: "おすすめのマネー", items: MockBank.electronicMoney) { item in
-                        vm.myMonies.append(item)
-                        dismiss()
-                    }
-                } else {
-                    ProgressView()
+            }
+            .pickerStyle(.segmented)
+            .padding(.vertical)
+            .onChange(of: vm.selectedIndex) {
+                keyword = ""
+            }
+            
+            //SearchBar
+            TextField("検索", text: $keyword)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 8)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .padding(.horizontal, 8)
+                .ignoresSafeArea(.keyboard)
+        }
+        VStack {
+            if vm.selectedIndex == 0 {
+                listRowStyle(items: vm.filteredBanks(keyword)) { bankName in
+                    vm.showAlert = true
+                    vm.bankName = bankName
                 }
+            } else if vm.selectedIndex == 1 {
+                listRowStyle(items: vm.filteredCards(keyword)) { item in
+//                    bankVM.myCards.append(item)
+                    dismiss()
+                }
+            } else if vm.selectedIndex == 2 {
+                listRowStyle(items: vm.filteredElectronicMoney(keyword)) { item in
+//                    bankVM.myMonies.append(item)
+                    dismiss()
+                }
+            } else {
+                ProgressView()
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        //アラートで金額入力
+        .alert(vm.bankName, isPresented: $vm.showAlert) {
+            TextField("残高を入力してください", text: $vm.inputMoney)
+                .keyboardType(.decimalPad)
+            Button("OK") {
+                vm.checking()
+                dismiss()
+            }
+            Button("キャンセル", role: .cancel) {
+                vm.inputMoney = ""
             }
         }
     }
     private func listRowStyle(
-        title: String,
         items: [String],
         action: @escaping (String) -> Void
     ) -> some View {
         List {
-            Text(title)
-                .fontWeight(.bold)
             ForEach(items, id: \.self) { item in
                 Button {
                     //　クリックしたitemをBankViewに渡す)
@@ -74,5 +93,5 @@ struct BankListView: View {
 
 #Preview {
     BankListView()
-        .environmentObject(BankViewModel())
+        .environmentObject(BankListViewModel(repository: BankRepoImplLocal()))
 }

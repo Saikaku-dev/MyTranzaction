@@ -12,28 +12,28 @@ struct BankView: View {
     @EnvironmentObject var vm: BankViewModel
     var body: some View {
         NavigationStack {
+            Button(action: {
+                // 口座を登録する処理
+                isShowBanks = true
+            }) {
+                Text("口座・資産を連結・登録する")
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .mainColor()
+                    .cornerRadius(8)
+                    .padding(.horizontal)
+            }
+            
             ScrollView {
-                Button(action: {
-                    // 口座を登録する処理
-                    isShowBanks = true
-                }) {
-                    Text("口座・資産を連結・登録する")
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .mainColor()
-                        .cornerRadius(8)
-                        .padding(.horizontal)
-                }
-                
                 // MARK: - 口座カード
                 VStack(alignment: .leading) {
                     
                     if !vm.myBanks.isEmpty {
                         Text("銀行")
                         ForEach(vm.myBanks, id: \.self) { bank in
-                            bankCard(name: bank, balance: "0円")
+                            bankCard(name: bank.title, balance: String(bank.balance))
                         }
                     }
                     
@@ -50,13 +50,15 @@ struct BankView: View {
                             bankCard(name: money, balance: "0円")
                         }
                     }
-//
                 }
                 .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationDestination(isPresented: $isShowBanks) {
                 BankListView()
+            }
+            .onAppear() {
+                vm.fetchBanks()
             }
         }
     }
@@ -68,18 +70,23 @@ struct BankView: View {
                     .padding()
                 Spacer()
             }
-            HStack {
+            HStack(alignment: .bottom) {
                 Spacer()
                 Text(balance)
-                    .foregroundColor(.white)
-                    .padding()
+                    .font(.title3)
+                Text("円")
             }
+            .foregroundColor(.white)
+            .padding()
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: 100)
         .background(Color.gray)
+        .cornerRadius(8)
     }
 }
 
 #Preview {
     BankView()
-        .environmentObject(BankViewModel())
+        .environmentObject(BankViewModel(repository: BankRepoImplLocal()))
 }

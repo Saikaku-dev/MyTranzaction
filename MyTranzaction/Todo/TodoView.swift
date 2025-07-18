@@ -9,13 +9,7 @@ import SwiftUI
 
 struct TodoView: View {
     var body: some View {
-        Text("\(Date().onlyMonthString())月")
-        
-        Picker("Select a month", selection: .constant("January")) {
-            Text("January").tag("January")
-            Text("February").tag("February")
-            Text("March").tag("March")
-        }
+        //テスト
     }
 }
 
