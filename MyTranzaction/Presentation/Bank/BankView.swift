@@ -34,6 +34,9 @@ struct BankView: View {
                         Text("銀行")
                         ForEach(vm.myBanks, id: \.self) { bank in
                             bankCard(name: bank.title, balance: String(bank.balance))
+                                .onTapGesture {
+                                    vm.deleteBank(bank) //TODO: 削除gestureを変更
+                                }
                         }
                     }
                     

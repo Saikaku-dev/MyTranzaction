@@ -64,12 +64,9 @@ final class BankListViewModel:ObservableObject {
     
     func checking() {
         guard let moneyInt = Int(inputMoney),
-              moneyInt >= 0 else {
-            print("skip")
-            return
-        }
+              moneyInt >= 0 else {return}
         addBank(Bank(title: bankName, balance: moneyInt))
-        print("over")
+        inputMoney = ""
     }
     
     func addBank(_ bank: Bank) {
