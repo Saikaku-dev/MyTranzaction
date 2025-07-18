@@ -50,7 +50,6 @@ struct BankView: View {
                             bankCard(name: money, balance: "0円")
                         }
                     }
-//
                 }
                 .padding()
             }
@@ -75,7 +74,10 @@ struct BankView: View {
                     .padding()
             }
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: 100)
         .background(Color.gray)
+        .cornerRadius(8)
     }
 }
 
