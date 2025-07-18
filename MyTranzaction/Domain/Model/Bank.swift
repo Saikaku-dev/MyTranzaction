@@ -6,8 +6,17 @@
 //
 
 import Foundation
+import SwiftData
 
+@Model
 class Bank {
-    let id = UUID()
+    let id: String
+    var title: String
+    var balance: Int
     
+    init(title: String, balance: Int) {
+        self.id = UUID().uuidString
+        self.title = title
+        self.balance = balance
+    }
 }

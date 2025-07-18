@@ -9,7 +9,20 @@ import Foundation
 import Combine
 
 final class BankViewModel: ObservableObject {
-    @Published var myBanks: [String] = []
+    @Published var myBanks: [Bank] = []
     @Published var myCards: [String] = []
     @Published var myMonies: [String] = []
+    
+    init() {
+//        fetchBanks()
+    }
+    
+//    func fetchBanks() {
+//        myBanks = repository.getAllBanks()
+//    }
+//    
+//    func addBanks(_ bank: Bank) {
+//        repository.addBank(bank)
+//        fetchBanks()
+//    }
 }

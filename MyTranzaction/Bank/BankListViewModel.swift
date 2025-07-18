@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 final class BankListViewModel:ObservableObject {
     @Published var selectedIndex: Int = 0
@@ -14,20 +15,25 @@ final class BankListViewModel:ObservableObject {
     @Published var selectedCard = MockBank.cards[0]
     @Published var selectedPayment = MockBank.electronicMoney[0]
     
-    @Published var myBanks: [String] = []
+    @Published var banks: [String] = []
     @Published var myCards: [String] = []
     @Published var myElectronicMoney: [String] = []
-    
+    //金額入力ためのハンドル
+    @Published var showAlert:Bool = false
+    @Published var inputMoney:String = ""
+    @Published var bankName: String = ""
     let loader = LoadBankList()
+    @EnvironmentObject var bankVM: BankViewModel
+    var bank: Bank?
     
     init() {
-        self.myBanks = loader.load()
+        self.banks = loader.load()
         self.myCards = MockBank.cards
         self.myElectronicMoney = MockBank.electronicMoney
     }
     
-    func addBank(_ bank: String) {
-        myBanks.append(bank)
+    func addBank(_ bank: Bank) {
+//        banks.append(bank)
     }
     
     func addCard(_ card: String) {
@@ -40,9 +46,9 @@ final class BankListViewModel:ObservableObject {
     
     func filteredBanks(_ keyword: String) -> [String] {
         if keyword.isEmpty {
-            return myBanks
+            return banks
         } else {
-            return myBanks.filter { $0.localizedCaseInsensitiveContains(keyword) }
+            return banks.filter { $0.localizedCaseInsensitiveContains(keyword) }
         }
     }
     func filteredCards(_ keyword: String) -> [String] {
@@ -58,5 +64,17 @@ final class BankListViewModel:ObservableObject {
         } else {
             return myElectronicMoney.filter { $0.localizedCaseInsensitiveContains(keyword) }
         }
+    }
+    
+    func checkingType() {
+        guard let moneyInt = Int(inputMoney), moneyInt >= 0 else { return }
+        
+        if let bank = bank {
+            bank.title = bankName
+            bank.balance = moneyInt
+            bankVM.myBanks.append(bank)
+        }
+        inputMoney = ""
+        bank = nil
     }
 }

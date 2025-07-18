@@ -11,9 +11,7 @@ struct BankListView: View {
     private let categories:[String] = ["銀行", "カード", "電子マネー"]
     @Environment(\.dismiss) var dismiss
     @StateObject private var vm = BankListViewModel()
-    @EnvironmentObject var bankVM: BankViewModel
     @State var keyword: String = ""
-    
     var body: some View {
         VStack(spacing: 0) {
             Picker ("Category", selection: $vm.selectedIndex) {
@@ -38,18 +36,18 @@ struct BankListView: View {
         }
         VStack {
             if vm.selectedIndex == 0 {
-                listRowStyle(items: vm.filteredBanks(keyword)) { item in
-                    bankVM.myBanks.append(item)
-                    dismiss()
+                listRowStyle(items: vm.filteredBanks(keyword)) { bankName in
+                    vm.showAlert = true
+                    vm.bankName = bankName
                 }
             } else if vm.selectedIndex == 1 {
                 listRowStyle(items: vm.filteredCards(keyword)) { item in
-                    bankVM.myCards.append(item)
+//                    bankVM.myCards.append(item)
                     dismiss()
                 }
             } else if vm.selectedIndex == 2 {
                 listRowStyle(items: vm.filteredElectronicMoney(keyword)) { item in
-                    bankVM.myMonies.append(item)
+//                    bankVM.myMonies.append(item)
                     dismiss()
                 }
             } else {
@@ -57,6 +55,18 @@ struct BankListView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        //アラートで金額入力
+        .alert(vm.bankName, isPresented: $vm.showAlert) {
+            TextField("残高を入力してください", text: $vm.inputMoney)
+                .keyboardType(.decimalPad)
+            Button("OK") {
+                vm.checkingType()
+                dismiss()
+            }
+            Button("キャンセル", role: .cancel) {
+                vm.inputMoney = ""
+            }
+        }
     }
     private func listRowStyle(
         items: [String],
@@ -81,5 +91,4 @@ struct BankListView: View {
 
 #Preview {
     BankListView()
-        .environmentObject(BankViewModel())
 }

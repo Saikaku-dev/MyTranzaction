@@ -33,7 +33,7 @@ struct BankView: View {
                     if !vm.myBanks.isEmpty {
                         Text("銀行")
                         ForEach(vm.myBanks, id: \.self) { bank in
-                            bankCard(name: bank, balance: "0円")
+                            bankCard(name: bank.title, balance: String(bank.balance))
                         }
                     }
                     
