@@ -12,21 +12,21 @@ struct BankView: View {
     @EnvironmentObject var vm: BankViewModel
     var body: some View {
         NavigationStack {
+            Button(action: {
+                // 口座を登録する処理
+                isShowBanks = true
+            }) {
+                Text("口座・資産を連結・登録する")
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .mainColor()
+                    .cornerRadius(8)
+                    .padding(.horizontal)
+            }
+            
             ScrollView {
-                Button(action: {
-                    // 口座を登録する処理
-                    isShowBanks = true
-                }) {
-                    Text("口座・資産を連結・登録する")
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .mainColor()
-                        .cornerRadius(8)
-                        .padding(.horizontal)
-                }
-                
                 // MARK: - 口座カード
                 VStack(alignment: .leading) {
                     
@@ -57,6 +57,9 @@ struct BankView: View {
             .navigationDestination(isPresented: $isShowBanks) {
                 BankListView()
             }
+            .onAppear() {
+                vm.fetchBanks()
+            }
         }
     }
     private func bankCard(name: String, balance: String) -> some View {
@@ -67,12 +70,14 @@ struct BankView: View {
                     .padding()
                 Spacer()
             }
-            HStack {
+            HStack(alignment: .bottom) {
                 Spacer()
                 Text(balance)
-                    .foregroundColor(.white)
-                    .padding()
+                    .font(.title3)
+                Text("円")
             }
+            .foregroundColor(.white)
+            .padding()
         }
         .frame(maxWidth: .infinity)
         .frame(height: 100)
@@ -83,5 +88,5 @@ struct BankView: View {
 
 #Preview {
     BankView()
-        .environmentObject(BankViewModel())
+        .environmentObject(BankViewModel(repository: BankRepoImplLocal()))
 }

@@ -8,21 +8,8 @@
 import SwiftUI
 
 struct TodoView: View {
-    let loader = LoadBankList()
     var body: some View {
-        Text("\(Date().onlyMonthString())月")
-        
-//        Picker("Select a month", selection: .constant("January")) {
-//            Text("January").tag("January")
-//            Text("February").tag("February")
-//            Text("March").tag("March")
-//        }
-    }
-    
-    func load() {
-        if let fileUrl = Bundle.main.url(forResource: "banklistAPI", withExtension: "csv") {
-            print(fileUrl)
-        }
+        //テスト
     }
 }
 
