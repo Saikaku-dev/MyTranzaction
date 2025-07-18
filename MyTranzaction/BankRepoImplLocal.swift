@@ -24,4 +24,9 @@ class BankRepoImplLocal: BankRepository {
         context.insert(bank)
         try? context.save()
     }
+    
+    func deleteBank(_ bank: Bank) {
+        context.delete(bank)
+        try? context.save()
+    }
 }

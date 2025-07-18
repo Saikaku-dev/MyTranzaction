@@ -12,17 +12,19 @@ final class BankViewModel: ObservableObject {
     @Published var myBanks: [Bank] = []
     @Published var myCards: [String] = []
     @Published var myMonies: [String] = []
+    private var repository: BankRepository
     
-    init() {
-//        fetchBanks()
+    init(repository: BankRepository) {
+        self.repository = repository
+        fetchBanks()
     }
     
-//    func fetchBanks() {
-//        myBanks = repository.getAllBanks()
-//    }
-//    
-//    func addBanks(_ bank: Bank) {
-//        repository.addBank(bank)
-//        fetchBanks()
-//    }
+    func fetchBanks() {
+        myBanks = repository.getAllBanks()
+    }
+    
+    func deleteBank(_ bank: Bank) {
+        repository.deleteBank(bank)
+        fetchBanks()
+    }
 }

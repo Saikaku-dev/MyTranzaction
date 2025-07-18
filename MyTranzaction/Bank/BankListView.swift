@@ -10,8 +10,10 @@ import SwiftUI
 struct BankListView: View {
     private let categories:[String] = ["銀行", "カード", "電子マネー"]
     @Environment(\.dismiss) var dismiss
-    @StateObject private var vm = BankListViewModel()
+    @EnvironmentObject var vm: BankListViewModel
+    @EnvironmentObject var bankVM: BankViewModel
     @State var keyword: String = ""
+    @State var currentBank: Bank?
     var body: some View {
         VStack(spacing: 0) {
             Picker ("Category", selection: $vm.selectedIndex) {
@@ -60,7 +62,7 @@ struct BankListView: View {
             TextField("残高を入力してください", text: $vm.inputMoney)
                 .keyboardType(.decimalPad)
             Button("OK") {
-                vm.checkingType()
+                vm.checking()
                 dismiss()
             }
             Button("キャンセル", role: .cancel) {
@@ -91,4 +93,5 @@ struct BankListView: View {
 
 #Preview {
     BankListView()
+        .environmentObject(BankListViewModel(repository: BankRepoImplLocal()))
 }

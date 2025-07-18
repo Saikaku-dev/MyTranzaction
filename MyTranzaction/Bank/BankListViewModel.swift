@@ -23,17 +23,13 @@ final class BankListViewModel:ObservableObject {
     @Published var inputMoney:String = ""
     @Published var bankName: String = ""
     let loader = LoadBankList()
-    @EnvironmentObject var bankVM: BankViewModel
-    var bank: Bank?
+    private var repository: BankRepository
     
-    init() {
+    init(repository: BankRepository) {
+        self.repository = repository
         self.banks = loader.load()
         self.myCards = MockBank.cards
         self.myElectronicMoney = MockBank.electronicMoney
-    }
-    
-    func addBank(_ bank: Bank) {
-//        banks.append(bank)
     }
     
     func addCard(_ card: String) {
@@ -66,15 +62,17 @@ final class BankListViewModel:ObservableObject {
         }
     }
     
-    func checkingType() {
-        guard let moneyInt = Int(inputMoney), moneyInt >= 0 else { return }
-        
-        if let bank = bank {
-            bank.title = bankName
-            bank.balance = moneyInt
-            bankVM.myBanks.append(bank)
+    func checking() {
+        guard let moneyInt = Int(inputMoney),
+              moneyInt >= 0 else {
+            print("skip")
+            return
         }
-        inputMoney = ""
-        bank = nil
+        addBank(Bank(title: bankName, balance: moneyInt))
+        print("over")
+    }
+    
+    func addBank(_ bank: Bank) {
+        repository.addBank(bank)
     }
 }
