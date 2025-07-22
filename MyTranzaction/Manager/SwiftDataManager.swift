@@ -16,7 +16,7 @@ final class SwiftDataManager {
     
     private init() {
         do {
-            container = try ModelContainer(for: Bank.self)
+            container = try ModelContainer(for: Bank.self, User.self)
         } catch {
             fatalError("Unable to initialize ModelContainer: \(error)")
         }

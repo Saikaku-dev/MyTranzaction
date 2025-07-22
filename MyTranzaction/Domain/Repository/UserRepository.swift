@@ -8,5 +8,7 @@
 import Foundation
 
 protocol UserRepository {
-    func getAllAssets() -> Assets
+    func getUser(account: String, password: String) -> User?
+    func saveUser(_ user: User)
+    func fetchAllUsers() -> [User]
 }

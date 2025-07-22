@@ -9,7 +9,9 @@ import SwiftUI
 
 struct BankView: View {
     @State private var isShowBanks: Bool = false
-    @EnvironmentObject var vm: BankViewModel
+    @StateObject private var vm = BankViewModel(
+        useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()))
+    
     var body: some View {
         NavigationStack {
             Button(action: {
@@ -96,5 +98,4 @@ struct BankView: View {
 
 #Preview {
     BankView()
-        .environmentObject(BankViewModel(repository: BankRepoImplLocal()))
 }

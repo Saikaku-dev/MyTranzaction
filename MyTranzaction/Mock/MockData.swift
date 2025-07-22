@@ -11,7 +11,7 @@ final class MockUser {
     static let user: User = User(
         account: "test@test.com",
         password: "password",
-        asset: Assets(totalAssets: 0, liabilities: 0))
+        asset: Assets(totalAssets: 10, liabilities: 330))
 }
 
 final class MockData {

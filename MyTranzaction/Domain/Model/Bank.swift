@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Bank {
+final class Bank {
     let id: String
     var title: String
     var balance: Int

@@ -6,50 +6,71 @@
 //
 
 import SwiftUI
-import Combine
-
-class LoginViewModel: ObservableObject {
-    var currentUser: User?
-    @Published var account: String = ""
-    @Published var passoword: String = ""
-    var session: SessionStore
-    
-    init(session: SessionStore) {
-        self.session = session
-    }
-    
-    func login() {
-        currentUser = MockUser.user
-        if let user = currentUser {
-            account = user.account
-            passoword = user.password
-            session.isLogin = true
-        } else {
-            print("ログインエラー: ユーザー情報取得に失敗しました")
-        }
-    }
-}
 
 struct LoginView: View {
-    @StateObject var vm: LoginViewModel
+    @StateObject var vm = LoginViewModel(
+        useCase: UserUseCase(userRepository: UserRepoSwiftDataImpl()))
+    @EnvironmentObject var session: SessionStore
+    @State private var showSignup: Bool = false
+    @State private var showSheet: Bool = false
     var body: some View {
-        VStack {
-            TextField("account", text: $vm.account)
-            Divider()
-            TextField("password", text:$vm.passoword)
-            Divider()
-            Button("Login") {
-                vm.login()
+        NavigationStack {
+            VStack {
+                TextField("account", text: $vm.account)
+                Divider()
+                TextField("password", text:$vm.password)
+                Divider()
+                
+                if vm.showErrorMessage {
+                    Text(vm.errorMessage)
+                        .foregroundColor(.red)
+                        .font(.caption)
+                }
+                HStack {
+                    Button("Signup") {
+                        showSignup = true
+                    }
+                    
+                    Button("Login") {
+                        vm.login(session: session)
+                    }
+                }
+                .padding()
             }
-            .padding()
+            .ignoresSafeArea(.keyboard)
+            .fullScreenCover(isPresented: $session.isLogin) {
+                MainTabView()
+            }
+            .navigationDestination(isPresented: $showSignup) {
+                SignupView()
+            }
+            .frame(maxHeight: .infinity)
+            .overlay(alignment: .topTrailing) {
+                Image(systemName: "gear")
+                    .font(.system(size: 24))
+                    .onTapGesture {
+                        vm.fetchAllUsers()
+                        showSheet = true
+                    }
+            }
+            .sheet(isPresented: $showSheet) {
+                usersList()
+                    .presentationDetents([.medium])
+            }
         }
-        .ignoresSafeArea(.keyboard)
-        .fullScreenCover(isPresented: $vm.session.isLogin) {
-            MainTabView()
+    }
+    private func usersList() -> some View {
+        List {
+            ForEach(vm.allUsers) { user in
+                Text("account:\(user.account), password:\(user.password)")
+            }
         }
     }
 }
 
 #Preview {
-    LoginView(vm: LoginViewModel(session: SessionStore()))
+    let modelContext = SwiftDataManager.shared.modelContext
+    LoginView(vm: LoginViewModel(
+        useCase: UserUseCase(userRepository: UserRepoSwiftDataImpl())))
+    .environmentObject(SessionStore(modelContext: modelContext))
 }

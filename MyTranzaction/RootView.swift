@@ -14,7 +14,7 @@ struct RootView: View {
         if session.isLogin {
             MainTabView()
         } else {
-            LoginView(vm: LoginViewModel(session: SessionStore()))
+            LoginView(vm: LoginViewModel(useCase: UserUseCase(userRepository: UserRepoSwiftDataImpl())))
         }
     }
 }

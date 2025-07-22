@@ -23,10 +23,10 @@ final class BankListViewModel:ObservableObject {
     @Published var inputMoney:String = ""
     @Published var bankName: String = ""
     let loader = LoadBankList()
-    private var repository: BankRepository
+    private var useCase: BankUseCase
     
-    init(repository: BankRepository) {
-        self.repository = repository
+    init(useCase: BankUseCase) {
+        self.useCase = useCase
         self.banks = loader.load()
         self.myCards = MockBank.cards
         self.myElectronicMoney = MockBank.electronicMoney
@@ -70,6 +70,6 @@ final class BankListViewModel:ObservableObject {
     }
     
     func addBank(_ bank: Bank) {
-        repository.addBank(bank)
+        useCase.addBank(bank)
     }
 }
