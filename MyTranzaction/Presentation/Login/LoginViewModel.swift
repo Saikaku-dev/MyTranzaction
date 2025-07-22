@@ -13,7 +13,7 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var showErrorMessage: Bool = false
     @Published var errorMessage: String = ""
-    var allUsers: [User] = []
+    @Published var allUsers: [User] = []
     
     private var useCase: UserUseCase
     
@@ -43,5 +43,10 @@ class LoginViewModel: ObservableObject {
     
     func fetchAllUsers() {
         allUsers = useCase.fetchAllUsers()
+    }
+    
+    func deleteUser(_ user: User) {
+        useCase.deleteUser(user)
+        fetchAllUsers()
     }
 }

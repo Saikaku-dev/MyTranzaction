@@ -25,4 +25,8 @@ class UserUseCase {
     func fetchAllUsers() -> [User] {
         userRepository.fetchAllUsers()
     }
+    
+    func deleteUser(_ user: User) {
+        userRepository.deleteUser(user)
+    }
 }

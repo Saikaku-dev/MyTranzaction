@@ -32,4 +32,9 @@ class UserRepoSwiftDataImpl: UserRepository {
         let descriptor = FetchDescriptor<User>()
         return (try? context.fetch(descriptor)) ?? []
     }
+    
+    func deleteUser(_ user: User) {
+        context.delete(user)
+        try? context.save()
+    }
 }

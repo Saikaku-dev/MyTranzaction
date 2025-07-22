@@ -63,6 +63,11 @@ struct LoginView: View {
         List {
             ForEach(vm.allUsers) { user in
                 Text("account:\(user.account), password:\(user.password)")
+                    .swipeActions(edge: .trailing) {
+                        Button("Delete") {
+                            vm.deleteUser(user)
+                        }
+                    }
             }
         }
     }
