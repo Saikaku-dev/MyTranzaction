@@ -27,4 +27,9 @@ class UserRepoSwiftDataImpl: UserRepository {
         context.insert(user)
         try? context.save()
     }
+    
+    func fetchAllUsers() -> [User] {
+        let descriptor = FetchDescriptor<User>()
+        return (try? context.fetch(descriptor)) ?? []
+    }
 }

@@ -21,4 +21,8 @@ class UserUseCase {
     func createUser(_ user: User) {
         userRepository.saveUser(user)
     }
+    
+    func fetchAllUsers() -> [User] {
+        userRepository.fetchAllUsers()
+    }
 }

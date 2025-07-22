@@ -13,18 +13,31 @@ class SignupViewModel: ObservableObject {
     @Published var password: String = ""
     private var useCase: UserUseCase
     @Published var showErrorMessage: Bool = false
+    @Published var errorMessage: String = ""
     
     init (useCase: UserUseCase) {
         self.useCase = useCase
     }
     
     func createAccount() -> Bool {
-        guard !account.isEmpty, !password.isEmpty else { return false }
+        guard !account.isEmpty, !password.isEmpty else {
+            errorMessage = "アカウント名とパスワードを入力してください"
+            showErrorMessage = true
+            return false
+        }
+        
+        if useCase.getUser(account: account, password: password) != nil {
+            errorMessage = "このアカウントは既に存在します"
+            showErrorMessage = true
+            return false
+        }
         // TODO: 正しいAssetsに置き換え
         let asset = Assets(totalAssets: 0, liabilities: 0)
         // TODO: アカウント作成ルールを追加
         let user = User(account: account, password: password, asset: asset)
         useCase.createUser(user)
+        showErrorMessage = false
+        errorMessage = ""
         return true
     }
 }
@@ -43,13 +56,11 @@ struct SignupView: View {
         Button("Create") {
             if vm.createAccount() {
                 dismiss()
-            } else {
-                vm.showErrorMessage = true
             }
         }
         
         if vm.showErrorMessage {
-            Text("作成失敗")
+            Text(vm.errorMessage)
                 .foregroundColor(.red)
                 .font(.caption)
         }

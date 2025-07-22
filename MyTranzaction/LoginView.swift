@@ -12,6 +12,7 @@ struct LoginView: View {
         useCase: UserUseCase(userRepository: UserRepoSwiftDataImpl()))
     @EnvironmentObject var session: SessionStore
     @State private var showSignup: Bool = false
+    @State private var showSheet: Bool = false
     var body: some View {
         NavigationStack {
             VStack {
@@ -43,11 +44,33 @@ struct LoginView: View {
             .navigationDestination(isPresented: $showSignup) {
                 SignupView()
             }
+            .frame(maxHeight: .infinity)
+            .overlay(alignment: .topTrailing) {
+                Image(systemName: "gear")
+                    .font(.system(size: 24))
+                    .onTapGesture {
+                        vm.fetchAllUsers()
+                        showSheet = true
+                    }
+            }
+            .sheet(isPresented: $showSheet) {
+                usersList()
+                    .presentationDetents([.medium])
+            }
+        }
+    }
+    private func usersList() -> some View {
+        List {
+            ForEach(vm.allUsers) { user in
+                Text("account:\(user.account), password:\(user.password)")
+            }
         }
     }
 }
 
 #Preview {
+    let modelContext = SwiftDataManager.shared.modelContext
     LoginView(vm: LoginViewModel(
         useCase: UserUseCase(userRepository: UserRepoSwiftDataImpl())))
+    .environmentObject(SessionStore(modelContext: modelContext))
 }

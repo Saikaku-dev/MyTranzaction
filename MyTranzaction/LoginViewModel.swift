@@ -13,21 +13,23 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var showErrorMessage: Bool = false
     @Published var errorMessage: String = ""
+    var allUsers: [User] = []
     
     private var useCase: UserUseCase
     
     init(useCase: UserUseCase) {
         self.useCase = useCase
+        fetchAllUsers()
     }
     
     func login(session: SessionStore) {
-        autoInput()
         guard !account.trimmingCharacters(in: .whitespaces).isEmpty,
               !password.trimmingCharacters(in: .whitespaces).isEmpty else {
             showErrorMessage = true
             errorMessage = "入力内容が未入力です"
             return
         }
+        
         if let user = useCase.getUser(account: account, password: password) {
             session.loginSuccess(user: user)
             showErrorMessage = false
@@ -38,9 +40,8 @@ class LoginViewModel: ObservableObject {
             session.currentUser = nil
         }
     }
-    // テスト
-    func autoInput() {
-        account = MockUser.user.account
-        password = MockUser.user.password
+    
+    func fetchAllUsers() {
+        allUsers = useCase.fetchAllUsers()
     }
 }
