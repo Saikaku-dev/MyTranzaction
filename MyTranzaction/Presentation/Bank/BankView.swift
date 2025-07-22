@@ -26,6 +26,11 @@ struct BankView: View {
                     .padding(.horizontal)
             }
             
+            // テスト
+            if let asset = vm.assetAmount {
+                Text("\(asset)")
+            }
+            
             ScrollView {
                 // MARK: - 口座カード
                 VStack(alignment: .leading) {

@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+protocol UserRepository {
+    func getAllAssets() -> Assets
+}

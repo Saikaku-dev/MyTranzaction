@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     let mock = MockData() //Mockデータ
+    @EnvironmentObject var homeVM: HomeViewModel
     
     var body: some View {
         VStack {
@@ -35,7 +36,7 @@ struct HomeView: View {
                         HStack {
                             Text("資産合計")
                             Spacer()
-                            Text("\(mock.totalAssets)円")
+                            Text("\(homeVM.user.asset.totalAssets)円")
                         }
                         Rectangle()
                             .frame(maxWidth: .infinity)
@@ -43,7 +44,7 @@ struct HomeView: View {
                         HStack { //マイナス資産
                             Text("負債")
                             Spacer()
-                            Text("\(mock.liabilities)円") //自分の負債額
+                            Text("\(homeVM.user.asset.liabilities)円") //自分の負債額
                         }
                     }
                     .homeViewTitleFont()
@@ -134,4 +135,5 @@ extension Date {
 
 #Preview {
     HomeView()
+        .environmentObject(BankViewModel(repository: BankRepoImplLocal()))
 }
