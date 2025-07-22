@@ -10,15 +10,18 @@ import SwiftData
 
 @Model
 final class User {
-    let id: String
+    @Attribute(.unique) var id: String
     var account: String
     var password: String
-    var asset: Assets
+    @Relationship var banks: [Bank] = []
     
-    init(account: String, password: String, asset: Assets) {
+    var totalAsset: Int {
+        banks.reduce(0) { $0 + $1.balance}
+    }
+    
+    init(account: String, password: String) {
         self.id = UUID().uuidString
         self.account = account
         self.password = password
-        self.asset = asset
     }
 }

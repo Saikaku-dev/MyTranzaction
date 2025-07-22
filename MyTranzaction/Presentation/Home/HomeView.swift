@@ -39,7 +39,7 @@ struct HomeView: View {
                             HStack {
                                 Text("資産合計")
                                 Spacer()
-                                Text("\(user.asset.totalAssets)円")
+                                Text("\(user.totalAsset)円")
                             }
                             Rectangle()
                                 .frame(maxWidth: .infinity)
@@ -47,7 +47,7 @@ struct HomeView: View {
                             HStack { //マイナス資産
                                 Text("負債")
                                 Spacer()
-                                Text("\(user.asset.liabilities)円") //自分の負債額
+                                Text("0円") //自分の負債額
                             }
                         }
                     }
@@ -142,7 +142,11 @@ extension Date {
 }
 
 #Preview {
+    let mockUser = MockUser.user
+    let modelContext = SwiftDataManager.shared.modelContext
     HomeView()
         .environmentObject(BankViewModel(
-            useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl())))
+            useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
+            user: mockUser))
+        .environmentObject(SessionStore(modelContext: modelContext))
 }

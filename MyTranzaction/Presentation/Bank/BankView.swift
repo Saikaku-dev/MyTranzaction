@@ -8,9 +8,16 @@
 import SwiftUI
 
 struct BankView: View {
+    @EnvironmentObject var session: SessionStore
+    @StateObject private var vm: BankViewModel
+    
     @State private var isShowBanks: Bool = false
-    @StateObject private var vm = BankViewModel(
-        useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()))
+    
+    init() {
+        _vm = StateObject(wrappedValue: BankViewModel(
+            useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
+            user: User(account: "", password: "")))
+    }
     
     var body: some View {
         NavigationStack {
@@ -39,20 +46,6 @@ struct BankView: View {
                                 .onTapGesture {
                                     vm.deleteBank(bank) //TODO: 削除gestureを変更
                                 }
-                        }
-                    }
-                    
-                    if !vm.myCards.isEmpty {
-                        Text("カード")
-                        ForEach(vm.myCards, id: \.self) { card in
-                            bankCard(name: card, balance: "0円")
-                        }
-                    }
-                    
-                    if !vm.myMonies.isEmpty {
-                        Text("電子マネー")
-                        ForEach(vm.myMonies, id: \.self) { money in
-                            bankCard(name: money, balance: "0円")
                         }
                     }
                 }

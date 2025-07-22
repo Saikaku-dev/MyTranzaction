@@ -31,10 +31,8 @@ class SignupViewModel: ObservableObject {
             showErrorMessage = true
             return false
         }
-        // TODO: 正しいAssetsに置き換え
-        let asset = Assets(totalAssets: 0, liabilities: 0)
         // TODO: アカウント作成ルールを追加
-        let user = User(account: account, password: password, asset: asset)
+        let user = User(account: account, password: password)
         useCase.createUser(user)
         showErrorMessage = false
         errorMessage = ""

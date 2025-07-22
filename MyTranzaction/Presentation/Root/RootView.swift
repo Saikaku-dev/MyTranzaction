@@ -11,7 +11,7 @@ struct RootView: View {
     @EnvironmentObject var session: SessionStore
     
     var body: some View {
-        if session.isLogin {
+        if session.isLogin && session.currentUser != nil {
             MainTabView()
         } else {
             LoginView(vm: LoginViewModel(useCase: UserUseCase(userRepository: UserRepoSwiftDataImpl())))

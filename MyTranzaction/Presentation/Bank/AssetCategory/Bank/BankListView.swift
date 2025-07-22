@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct BankListView: View {
-    private let categories:[String] = ["銀行", "カード", "電子マネー"]
+    @EnvironmentObject var session: SessionStore
     @Environment(\.dismiss) var dismiss
-    @StateObject private var vm = BankListViewModel(useCase: BankUseCase(
-        bankRepository: BankRepoSwiftDataImpl()))
+    @StateObject private var vm: BankListViewModel
     @State var keyword: String = ""
-    @State var currentBank: Bank?
+    private let categories:[String] = ["銀行", "カード", "電子マネー"]
+    
+    init () {
+        _vm = StateObject(wrappedValue: BankListViewModel(
+            useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
+            user: User(account: "", password: "")))
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             Picker ("Category", selection: $vm.selectedIndex) {

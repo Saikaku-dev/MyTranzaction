@@ -8,10 +8,13 @@
 import Foundation
 
 final class MockUser {
-    static let user: User = User(
-        account: "test@test.com",
-        password: "password",
-        asset: Assets(totalAssets: 10, liabilities: 330))
+    static let user: User = {
+        let user = User(
+            account: "test@test.com",
+            password: "password"
+        )
+        return user
+    } ()
 }
 
 final class MockData {
