@@ -9,7 +9,9 @@ import SwiftUI
 
 struct BankView: View {
     @State private var isShowBanks: Bool = false
-    @EnvironmentObject var vm: BankViewModel
+    @StateObject private var vm = BankViewModel(
+        useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()))
+    
     var body: some View {
         NavigationStack {
             Button(action: {
@@ -26,6 +28,11 @@ struct BankView: View {
                     .padding(.horizontal)
             }
             
+            // テスト
+            if let asset = vm.assetAmount {
+                Text("\(asset)")
+            }
+            
             ScrollView {
                 // MARK: - 口座カード
                 VStack(alignment: .leading) {
@@ -34,6 +41,9 @@ struct BankView: View {
                         Text("銀行")
                         ForEach(vm.myBanks, id: \.self) { bank in
                             bankCard(name: bank.title, balance: String(bank.balance))
+                                .onTapGesture {
+                                    vm.deleteBank(bank) //TODO: 削除gestureを変更
+                                }
                         }
                     }
                     
@@ -88,5 +98,4 @@ struct BankView: View {
 
 #Preview {
     BankView()
-        .environmentObject(BankViewModel(repository: BankRepoImplLocal()))
 }

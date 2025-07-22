@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-class BankRepoImplLocal: BankRepository {
+class BankRepoSwiftDataImpl: BankRepository {
     private let context: ModelContext
     
     init(context: ModelContext = SwiftDataManager.shared.modelContext) {

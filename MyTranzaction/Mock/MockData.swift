@@ -7,6 +7,13 @@
 
 import Foundation
 
+final class MockUser {
+    static let user: User = User(
+        account: "test@test.com",
+        password: "password",
+        asset: Assets(totalAssets: 10, liabilities: 330))
+}
+
 final class MockData {
     let totalAssets: Int = 100000 //総資産
     let liabilities: Int = 55555 //負債

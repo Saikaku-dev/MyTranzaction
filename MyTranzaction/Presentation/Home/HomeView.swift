@@ -9,6 +9,9 @@ import SwiftUI
 
 struct HomeView: View {
     let mock = MockData() //Mockデータ
+    @StateObject private var vm = HomeViewModel(
+        useCase: UserUseCase(userRepository: UserRepoSwiftDataImpl()))
+    @EnvironmentObject var session: SessionStore
     
     var body: some View {
         VStack {
@@ -21,29 +24,31 @@ struct HomeView: View {
                     .padding(.trailing)
                 Image(systemName: "gearshape") //User設定
                     .onTapGesture {
-                        print("Clicked gear") //TODO: ユーザーカスタマイズ
+                        // ログアウト
+                        session.logout()
                     }
             }
             .foregroundColor(.cyan)
             .font(.system(size: 24))
             .padding(.horizontal)
-            
             GeometryReader { geometry in
                 ScrollView {
                     // MARK: - HEADER 総資産・マイナス資産
                     VStack(alignment: .leading) {
-                        HStack {
-                            Text("資産合計")
-                            Spacer()
-                            Text("\(mock.totalAssets)円")
-                        }
-                        Rectangle()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 1)
-                        HStack { //マイナス資産
-                            Text("負債")
-                            Spacer()
-                            Text("\(mock.liabilities)円") //自分の負債額
+                        if let user = session.currentUser {
+                            HStack {
+                                Text("資産合計")
+                                Spacer()
+                                Text("\(user.asset.totalAssets)円")
+                            }
+                            Rectangle()
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 1)
+                            HStack { //マイナス資産
+                                Text("負債")
+                                Spacer()
+                                Text("\(user.asset.liabilities)円") //自分の負債額
+                            }
                         }
                     }
                     .homeViewTitleFont()
@@ -94,6 +99,10 @@ struct HomeView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color(.systemGray6))
         }
+        .onAppear() {
+            print(session.currentUser ?? "User not logged in")
+            print("Session isLogin:\(session.isLogin)")
+        }
     }
     
     @ViewBuilder
@@ -134,4 +143,6 @@ extension Date {
 
 #Preview {
     HomeView()
+        .environmentObject(BankViewModel(
+            useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl())))
 }
