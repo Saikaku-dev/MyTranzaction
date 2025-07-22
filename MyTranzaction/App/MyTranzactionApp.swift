@@ -9,19 +9,17 @@ import SwiftUI
 
 @main
 struct MyTranzactionApp: App {
-    @StateObject var session = SessionStore()
-    @StateObject var homeVM = HomeViewModel()
-    @StateObject var bankVM = BankViewModel(repository: BankRepoImplLocal())
-    @StateObject var bankListVM = BankListViewModel(repository: BankRepoImplLocal())
-    let modelContext = SwiftDataManager.shared.modelContext
+    @StateObject var session: SessionStore
+    
+    init() {
+        let modelContext = SwiftDataManager.shared.modelContext
+        _session = StateObject(wrappedValue: SessionStore(modelContext: modelContext))
+    }
     
     var body: some Scene {
         WindowGroup {
-            LoginView(vm: LoginViewModel(session: session))
-                .environmentObject(bankVM)
-                .environmentObject(bankListVM)
+            RootView()
                 .environmentObject(session)
-                .environmentObject(homeVM)
         }
     }
 }

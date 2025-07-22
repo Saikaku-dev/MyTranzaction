@@ -9,9 +9,9 @@ import Foundation
 import Combine
 
 class HomeViewModel: ObservableObject {
-    @Published var user: User = MockUser.user
+    let useCase: UserUseCase
     
-    init() {
-        user.asset.totalAssets = 999
+    init(useCase: UserUseCase) {
+        self.useCase = useCase
     }
 }

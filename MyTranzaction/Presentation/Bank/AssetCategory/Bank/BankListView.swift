@@ -10,8 +10,8 @@ import SwiftUI
 struct BankListView: View {
     private let categories:[String] = ["銀行", "カード", "電子マネー"]
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var vm: BankListViewModel
-    @EnvironmentObject var bankVM: BankViewModel
+    @StateObject private var vm = BankListViewModel(useCase: BankUseCase(
+        bankRepository: BankRepoSwiftDataImpl()))
     @State var keyword: String = ""
     @State var currentBank: Bank?
     var body: some View {
@@ -93,5 +93,4 @@ struct BankListView: View {
 
 #Preview {
     BankListView()
-        .environmentObject(BankListViewModel(repository: BankRepoImplLocal()))
 }
