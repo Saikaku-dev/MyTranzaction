@@ -13,10 +13,10 @@ struct BankView: View {
     
     @State private var isShowBanks: Bool = false
     
-    init(user: User) {
+    init() {
         _vm = StateObject(wrappedValue: BankViewModel(
             useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
-            user: user))
+            user: MockUser.user))
     }
     
     var body: some View {
@@ -38,24 +38,22 @@ struct BankView: View {
             ScrollView {
                 // MARK: - 口座カード
                 VStack(alignment: .leading) {
-                    
-                    if !vm.myBanks.isEmpty {
-                        Text("銀行")
-                        ForEach(vm.myBanks, id: \.self) { bank in
-                            bankCard(name: bank.title, balance: String(bank.balance))
-                                .onTapGesture {
-                                    vm.deleteBank(bank) //TODO: 削除gestureを変更
-                                }
+                        if !vm.myBanks.isEmpty {
+                            Text("銀行")
+                            ForEach(vm.myBanks, id: \.self) { bank in
+                                bankCard(name: bank.title, balance: String(bank.balance))
+                                    .onTapGesture {
+                                        vm.deleteBank(bank) //TODO: 削除gestureを変更
+                                    }
+                            }
                         }
-                    }
+                    
                 }
                 .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationDestination(isPresented: $isShowBanks) {
-                if let user = session.currentUser {
-                    BankListView(user: user)
-                }
+                BankListView()
             }
             .onAppear() {
                 vm.fetchBanks()
@@ -87,5 +85,5 @@ struct BankView: View {
 }
 
 #Preview {
-    BankView(user: MockUser.user)
+    BankView()
 }

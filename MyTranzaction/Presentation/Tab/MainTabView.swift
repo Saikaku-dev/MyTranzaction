@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @EnvironmentObject var session: SessionStore
     var body: some View {
         TabView {
             HomeView()
@@ -16,7 +15,7 @@ struct MainTabView: View {
                     Image(systemName: "house")
                     Text("Home")
                 }
-            BankView(user: session.currentUser!)
+            BankView()
                 .tabItem {
                     Image(systemName: "chineseyuanrenminbisign.bank.building")
                     Text("Bank")

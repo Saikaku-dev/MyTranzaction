@@ -11,14 +11,12 @@ import SwiftData
 @Model
 final class Bank {
     @Attribute(.unique) var id: String
-    var title: String // 資産毎の名前
-    var balance: Int // 金額
-    @Relationship(inverse: \User.banks) var owner: User // 資産の所有者
+    var title: String // 口座の名前
+    var balance: Int // 口座毎の金額
     
-    init(title: String, balance: Int, owner: User) {
+    init(title: String, balance: Int) {
         self.id = UUID().uuidString
         self.title = title
         self.balance = balance
-        self.owner = owner
     }
 }

@@ -20,7 +20,6 @@ class BankRepoSwiftDataImpl: BankRepository {
     }
     
     func addBank(_ bank: Bank, to user: User) {
-        bank.owner = user
         user.banks.append(bank)
         context.insert(bank)
         try? context.save()

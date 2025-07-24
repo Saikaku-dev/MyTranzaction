@@ -31,9 +31,6 @@ class UserRepoSwiftDataImpl: UserRepository {
     }
     
     func deleteUser(_ user: User) {
-        for bank in user.banks {
-            context.delete(bank)
-        }
         context.delete(user)
         try? context.save()
     }

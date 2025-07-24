@@ -14,10 +14,10 @@ struct BankListView: View {
     @State var keyword: String = ""
     private let categories:[String] = ["銀行", "カード", "電子マネー"]
     
-    init (user: User) {
+    init () {
         _vm = StateObject(wrappedValue: BankListViewModel(
             useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
-            user: user))
+            user: MockUser.user))
     }
     
     var body: some View {
@@ -50,12 +50,10 @@ struct BankListView: View {
                 }
             } else if vm.selectedIndex == 1 {
                 listRowStyle(items: vm.filteredCards(keyword)) { item in
-//                    bankVM.myCards.append(item)
                     dismiss()
                 }
             } else if vm.selectedIndex == 2 {
                 listRowStyle(items: vm.filteredElectronicMoney(keyword)) { item in
-//                    bankVM.myMonies.append(item)
                     dismiss()
                 }
             } else {
@@ -98,5 +96,5 @@ struct BankListView: View {
 }
 
 #Preview {
-    BankListView(user: MockUser.user)
+    BankListView()
 }
