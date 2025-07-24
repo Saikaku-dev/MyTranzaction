@@ -39,7 +39,7 @@ struct HomeView: View {
                             HStack {
                                 Text("資産合計")
                                 Spacer()
-                                Text("\(user.asset.totalAssets)円")
+                                Text("--円")
                             }
                             Rectangle()
                                 .frame(maxWidth: .infinity)
@@ -47,7 +47,7 @@ struct HomeView: View {
                             HStack { //マイナス資産
                                 Text("負債")
                                 Spacer()
-                                Text("\(user.asset.liabilities)円") //自分の負債額
+                                Text("0円") //自分の負債額
                             }
                         }
                     }
@@ -100,8 +100,10 @@ struct HomeView: View {
             .background(Color(.systemGray6))
         }
         .onAppear() {
-            print(session.currentUser ?? "User not logged in")
+            print("*********************************")
+            print(session.currentUser?.account ?? "User not logged in")
             print("Session isLogin:\(session.isLogin)")
+            print("*********************************")
         }
     }
     
@@ -142,7 +144,11 @@ extension Date {
 }
 
 #Preview {
+    let mockUser = MockUser.user
+    let modelContext = SwiftDataManager.shared.modelContext
     HomeView()
         .environmentObject(BankViewModel(
-            useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl())))
+            useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
+            user: mockUser))
+        .environmentObject(SessionStore(modelContext: modelContext))
 }

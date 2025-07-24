@@ -10,28 +10,30 @@ import Combine
 
 final class BankViewModel: ObservableObject {
     @Published var myBanks: [Bank] = []
-    @Published var myCards: [String] = []
-    @Published var myMonies: [String] = []
     @Published var assetAmount: Int?
     
     private let useCase: BankUseCase
+    var currentUser: User
     
-    init(useCase: BankUseCase) {
+    init(useCase: BankUseCase, user: User) {
         self.useCase = useCase
+        self.currentUser = user
+        fetchBanks()
+    }
+    
+    func setUser(_ user: User) {
+        guard user.id != currentUser.id else { return }
+        currentUser = user
         fetchBanks()
     }
     
     func fetchBanks() {
-        myBanks = useCase.getAllBanks()
-        updateAsset()
+        let banks = useCase.getAllBanks(for: currentUser)
+        myBanks = banks
     }
     
     func deleteBank(_ bank: Bank) {
         useCase.deleteBank(bank)
         fetchBanks()
-    }
-    
-    func updateAsset() {
-        assetAmount = myBanks.reduce(0) { $0 + $1.balance }
     }
 }

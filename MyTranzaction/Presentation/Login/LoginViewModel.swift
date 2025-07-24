@@ -13,7 +13,7 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var showErrorMessage: Bool = false
     @Published var errorMessage: String = ""
-    var allUsers: [User] = []
+    @Published var allUsers: [User] = []
     
     private var useCase: UserUseCase
     
@@ -26,13 +26,13 @@ class LoginViewModel: ObservableObject {
         guard !account.trimmingCharacters(in: .whitespaces).isEmpty,
               !password.trimmingCharacters(in: .whitespaces).isEmpty else {
             showErrorMessage = true
-            errorMessage = "入力内容が未入力です"
+            errorMessage = "アカウントかパスワードが未入力です"
             return
         }
         
-        if let user = useCase.getUser(account: account, password: password) {
+        if let user = useCase.getUser(account: account), user.password == password {
             session.loginSuccess(user: user)
-            showErrorMessage = false
+            showErrorMessage = false // エラーメッセージを初期化
             errorMessage = ""
         } else {
             showErrorMessage = true
@@ -43,5 +43,10 @@ class LoginViewModel: ObservableObject {
     
     func fetchAllUsers() {
         allUsers = useCase.fetchAllUsers()
+    }
+    
+    func deleteUser(_ user: User) {
+        useCase.deleteUser(user)
+        fetchAllUsers()
     }
 }

@@ -14,12 +14,12 @@ class BankUseCase {
         self.bankRepository = bankRepository
     }
     
-    func getAllBanks() -> [Bank] {
-        return bankRepository.getAllBanks()
+    func getAllBanks(for user: User) -> [Bank] {
+        return bankRepository.getAllBanks(for: user)
     }
     
-    func addBank(_ bank: Bank) {
-        bankRepository.addBank(bank)
+    func addBank(_ bank: Bank, to user: User) {
+        bankRepository.addBank(bank, to: user)
     }
     
     func deleteBank(_ bank: Bank) {

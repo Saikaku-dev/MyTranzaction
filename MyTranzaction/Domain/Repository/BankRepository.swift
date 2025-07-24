@@ -8,7 +8,7 @@
 import Foundation
 
 protocol BankRepository {
-    func getAllBanks() -> [Bank]
-    func addBank(_ bank: Bank)
+    func getAllBanks(for user: User) -> [Bank]
+    func addBank(_ bank: Bank, to user: User)
     func deleteBank(_ bank: Bank)
 }

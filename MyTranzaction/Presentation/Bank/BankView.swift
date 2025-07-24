@@ -8,9 +8,16 @@
 import SwiftUI
 
 struct BankView: View {
+    @EnvironmentObject var session: SessionStore
+    @StateObject private var vm: BankViewModel
+    
     @State private var isShowBanks: Bool = false
-    @StateObject private var vm = BankViewModel(
-        useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()))
+    
+    init(user: User) {
+        _vm = StateObject(wrappedValue: BankViewModel(
+            useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
+            user: user))
+    }
     
     var body: some View {
         NavigationStack {
@@ -28,11 +35,6 @@ struct BankView: View {
                     .padding(.horizontal)
             }
             
-            // テスト
-            if let asset = vm.assetAmount {
-                Text("\(asset)")
-            }
-            
             ScrollView {
                 // MARK: - 口座カード
                 VStack(alignment: .leading) {
@@ -46,26 +48,14 @@ struct BankView: View {
                                 }
                         }
                     }
-                    
-                    if !vm.myCards.isEmpty {
-                        Text("カード")
-                        ForEach(vm.myCards, id: \.self) { card in
-                            bankCard(name: card, balance: "0円")
-                        }
-                    }
-                    
-                    if !vm.myMonies.isEmpty {
-                        Text("電子マネー")
-                        ForEach(vm.myMonies, id: \.self) { money in
-                            bankCard(name: money, balance: "0円")
-                        }
-                    }
                 }
                 .padding()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationDestination(isPresented: $isShowBanks) {
-                BankListView()
+                if let user = session.currentUser {
+                    BankListView(user: user)
+                }
             }
             .onAppear() {
                 vm.fetchBanks()
@@ -97,5 +87,5 @@ struct BankView: View {
 }
 
 #Preview {
-    BankView()
+    BankView(user: MockUser.user)
 }

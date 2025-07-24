@@ -23,10 +23,12 @@ final class BankListViewModel:ObservableObject {
     @Published var inputMoney:String = ""
     @Published var bankName: String = ""
     let loader = LoadBankList()
-    private var useCase: BankUseCase
+    private let useCase: BankUseCase
+    private let currentUser: User
     
-    init(useCase: BankUseCase) {
+    init(useCase: BankUseCase, user: User) {
         self.useCase = useCase
+        self.currentUser = user
         self.banks = loader.load()
         self.myCards = MockBank.cards
         self.myElectronicMoney = MockBank.electronicMoney
@@ -65,11 +67,13 @@ final class BankListViewModel:ObservableObject {
     func checking() {
         guard let moneyInt = Int(inputMoney),
               moneyInt >= 0 else {return}
-        addBank(Bank(title: bankName, balance: moneyInt))
+        let newBank = Bank(title: bankName, balance: moneyInt, owner: currentUser)
+        addBank(newBank)
         inputMoney = ""
     }
     
     func addBank(_ bank: Bank) {
-        useCase.addBank(bank)
+        print("現在のユーザー: \(currentUser.account)")
+        useCase.addBank(bank, to: currentUser)
     }
 }

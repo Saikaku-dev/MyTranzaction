@@ -14,15 +14,19 @@ class UserUseCase {
         self.userRepository = userRepository
     }
     
-    func getUser(account: String, password: String) -> User? {
-        return userRepository.getUser(account: account, password: password)
+    func createUser(_ user: User) { //アカウント作成
+        userRepository.saveUser(user)
     }
     
-    func createUser(_ user: User) {
-        userRepository.saveUser(user)
+    func getUser(account: String) -> User? {
+        userRepository.getUser(byAccount: account)
     }
     
     func fetchAllUsers() -> [User] {
         userRepository.fetchAllUsers()
+    }
+    
+    func deleteUser(_ user: User) {
+        userRepository.deleteUser(user)
     }
 }
