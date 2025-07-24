@@ -32,7 +32,8 @@ class LoginViewModel: ObservableObject {
         
         if let user = useCase.getUser(account: account), user.password == password {
             session.loginSuccess(user: user)
-            showErrorMessage = false // エラーメッセージを初期化
+            // エラーメッセージを初期化
+            showErrorMessage = false
             errorMessage = ""
         } else {
             showErrorMessage = true
