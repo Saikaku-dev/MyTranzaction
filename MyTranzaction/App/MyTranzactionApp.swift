@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct MyTranzactionApp: App {
@@ -13,12 +14,13 @@ struct MyTranzactionApp: App {
     
     init() {
         let modelContext = SwiftDataManager.shared.modelContext
-        _session = StateObject(wrappedValue: SessionStore(modelContext: modelContext))
+        _session = StateObject(wrappedValue: SessionStore(modelContext: SwiftDataManager.shared.modelContext))
     }
     
     var body: some Scene {
         WindowGroup {
             RootView()
+                .environment(\.modelContext, SwiftDataManager.shared.modelContext)
                 .environmentObject(session)
         }
     }

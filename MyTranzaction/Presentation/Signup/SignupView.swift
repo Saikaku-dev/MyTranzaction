@@ -26,12 +26,12 @@ class SignupViewModel: ObservableObject {
             return false
         }
         
-        if useCase.getUser(account: account, password: password) != nil {
+        if useCase.getUser(account: account) != nil {
             errorMessage = "このアカウントは既に存在します"
             showErrorMessage = true
             return false
         }
-        // TODO: アカウント作成ルールを追加
+        
         let user = User(account: account, password: password)
         useCase.createUser(user)
         showErrorMessage = false

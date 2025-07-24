@@ -39,7 +39,7 @@ struct HomeView: View {
                             HStack {
                                 Text("資産合計")
                                 Spacer()
-                                Text("\(user.totalAsset)円")
+                                Text("--円")
                             }
                             Rectangle()
                                 .frame(maxWidth: .infinity)
@@ -100,8 +100,10 @@ struct HomeView: View {
             .background(Color(.systemGray6))
         }
         .onAppear() {
-            print(session.currentUser ?? "User not logged in")
+            print("*********************************")
+            print(session.currentUser?.account ?? "User not logged in")
             print("Session isLogin:\(session.isLogin)")
+            print("*********************************")
         }
     }
     

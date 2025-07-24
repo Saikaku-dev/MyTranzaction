@@ -14,10 +14,10 @@ struct BankListView: View {
     @State var keyword: String = ""
     private let categories:[String] = ["銀行", "カード", "電子マネー"]
     
-    init () {
+    init (user: User) {
         _vm = StateObject(wrappedValue: BankListViewModel(
             useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
-            user: User(account: "", password: "")))
+            user: user))
     }
     
     var body: some View {
@@ -98,5 +98,5 @@ struct BankListView: View {
 }
 
 #Preview {
-    BankListView()
+    BankListView(user: MockUser.user)
 }

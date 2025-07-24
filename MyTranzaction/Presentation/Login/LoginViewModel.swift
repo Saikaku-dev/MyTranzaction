@@ -26,13 +26,13 @@ class LoginViewModel: ObservableObject {
         guard !account.trimmingCharacters(in: .whitespaces).isEmpty,
               !password.trimmingCharacters(in: .whitespaces).isEmpty else {
             showErrorMessage = true
-            errorMessage = "入力内容が未入力です"
+            errorMessage = "アカウントかパスワードが未入力です"
             return
         }
         
-        if let user = useCase.getUser(account: account, password: password) {
+        if let user = useCase.getUser(account: account), user.password == password {
             session.loginSuccess(user: user)
-            showErrorMessage = false
+            showErrorMessage = false // エラーメッセージを初期化
             errorMessage = ""
         } else {
             showErrorMessage = true

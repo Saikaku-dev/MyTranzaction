@@ -15,22 +15,19 @@ class UserRepoSwiftDataImpl: UserRepository {
         self.context = context
     }
     
+    func fetchAllUsers() -> [User] {
+        let descriptor = FetchDescriptor<User>()
+        return (try? context.fetch(descriptor)) ?? []
+    }
     
-    func getUser(account: String, password: String) -> User? {
-        let fetchDescriptor = FetchDescriptor<User>(
-            predicate: #Predicate { $0.account == account && $0.password == password }
-        )
-        return try? context.fetch(fetchDescriptor).first
+    func getUser(byAccount account: String) -> User? {
+        let descriptor = FetchDescriptor<User>(predicate: #Predicate { $0.account == account})
+        return (try? context.fetch(descriptor).first)
     }
     
     func saveUser(_ user: User) {
         context.insert(user)
         try? context.save()
-    }
-    
-    func fetchAllUsers() -> [User] {
-        let descriptor = FetchDescriptor<User>()
-        return (try? context.fetch(descriptor)) ?? []
     }
     
     func deleteUser(_ user: User) {

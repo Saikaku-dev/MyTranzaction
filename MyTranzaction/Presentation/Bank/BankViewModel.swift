@@ -13,7 +13,7 @@ final class BankViewModel: ObservableObject {
     @Published var assetAmount: Int?
     
     private let useCase: BankUseCase
-    private var currentUser: User
+    var currentUser: User
     
     init(useCase: BankUseCase, user: User) {
         self.useCase = useCase
@@ -30,16 +30,10 @@ final class BankViewModel: ObservableObject {
     func fetchBanks() {
         let banks = useCase.getAllBanks(for: currentUser)
         myBanks = banks
-        currentUser.banks = myBanks
-        updateAsset()
     }
     
     func deleteBank(_ bank: Bank) {
         useCase.deleteBank(bank)
         fetchBanks()
-    }
-    
-    func updateAsset() {
-        assetAmount = currentUser.totalAsset
     }
 }

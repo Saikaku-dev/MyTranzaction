@@ -73,6 +73,7 @@ final class BankListViewModel:ObservableObject {
     }
     
     func addBank(_ bank: Bank) {
+        print("現在のユーザー: \(currentUser.account)")
         useCase.addBank(bank, to: currentUser)
     }
 }

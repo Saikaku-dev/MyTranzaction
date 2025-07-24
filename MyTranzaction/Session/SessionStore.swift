@@ -25,8 +25,8 @@ final class SessionStore: ObservableObject {
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         self.isLogin = UserDefaults.standard.bool(forKey: Self.loginKey)
-        if let userId = UserDefaults.standard.string(forKey: Self.userIdKey),
-           let user = SessionStore.fetchUser(with: userId, context: modelContext) {
+        if let userAccount = UserDefaults.standard.string(forKey: Self.userIdKey),
+           let user = SessionStore.fetchUser(with: userAccount, context: modelContext) {
             self.currentUser = user
             self.isLogin = true
         } else {
@@ -41,7 +41,7 @@ final class SessionStore: ObservableObject {
         self.currentUser = user
         if currentUser != nil {
             self.isLogin = true
-            UserDefaults.standard.set(user.id, forKey: Self.userIdKey)
+            UserDefaults.standard.set(user.account, forKey: Self.userIdKey)
         }
     }
     

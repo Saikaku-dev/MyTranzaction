@@ -13,10 +13,10 @@ struct BankView: View {
     
     @State private var isShowBanks: Bool = false
     
-    init() {
+    init(user: User) {
         _vm = StateObject(wrappedValue: BankViewModel(
             useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
-            user: User(account: "", password: "")))
+            user: user))
     }
     
     var body: some View {
@@ -53,7 +53,9 @@ struct BankView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .navigationDestination(isPresented: $isShowBanks) {
-                BankListView()
+                if let user = session.currentUser {
+                    BankListView(user: user)
+                }
             }
             .onAppear() {
                 vm.fetchBanks()
@@ -85,5 +87,5 @@ struct BankView: View {
 }
 
 #Preview {
-    BankView()
+    BankView(user: MockUser.user)
 }

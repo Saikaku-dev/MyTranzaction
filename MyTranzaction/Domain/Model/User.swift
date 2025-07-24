@@ -9,15 +9,11 @@ import Foundation
 import SwiftData
 
 @Model
-final class User {
+final class User { // User(id, account, password, [Bank])
     @Attribute(.unique) var id: String
     var account: String
     var password: String
     @Relationship var banks: [Bank] = []
-    
-    var totalAsset: Int {
-        banks.reduce(0) { $0 + $1.balance}
-    }
     
     init(account: String, password: String) {
         self.id = UUID().uuidString
