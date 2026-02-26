@@ -30,5 +30,12 @@ struct MainTabView: View {
 }
 
 #Preview {
+    let mockUser = MockUser.user
+    let modelContext = SwiftDataManager.shared.modelContext
+    
     MainTabView()
+        .environmentObject(BankViewModel(
+            useCase: BankUseCase(bankRepository: BankRepoSwiftDataImpl()),
+            user: mockUser))
+        .environmentObject(SessionStore(modelContext: modelContext))
 }
