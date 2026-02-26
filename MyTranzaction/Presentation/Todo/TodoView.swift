@@ -9,7 +9,14 @@ import SwiftUI
 
 struct TodoView: View {
     var body: some View {
-        //テスト
+        VStack {
+            Text("TODO機能")
+                .font(.title)
+            Text("開発中...")
+                .foregroundColor(.gray)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.systemGray6))
     }
 }
 
@@ -23,8 +30,4 @@ extension Date {
 
 #Preview {
     TodoView()
-}
-
-#Preview {
-    MainTabView()
 }
